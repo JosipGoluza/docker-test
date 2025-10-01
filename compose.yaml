@@ -1,0 +1,21 @@
+services:
+  service1:
+    build: ./service1
+    ports:
+      - 8081:8081
+    develop:
+      watch:
+        - path: ./service1
+          action: sync
+          target: /service1/app
+  service2:
+    build: ./service2
+    ports:
+      - 8082:8082
+    develop:
+      watch:
+        - path: ./service2/requirements.txt
+          action: rebuild
+        - path: ./service2
+          action: sync
+          target: /service2/app

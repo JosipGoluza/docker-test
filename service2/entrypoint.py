@@ -2,14 +2,16 @@ import requests
 import sys
 from datetime import datetime
 
-SERVICE1_URL = "http://service.example.com:8080"
+# dodati depends_on i health checks u docker-compose
+SERVICE1_URL = "http://service1:8080"
 
 lines = sys.stdin.read().splitlines()
 format_type = lines[0].strip() if lines else "iso"
 
 # call service1 with selected format
+#dodati try catch?
 response = requests.post(SERVICE1_URL, data=format_type)
 timestamp = response.text.strip()
 
-parsed = datetime.fromisoformat(timestamp) if format_type == "iso" else datetime.utcfromtimestamp(int(timestamp))
+parsed = datetime.fromisoformat(timestamp) if format_type == "iso" else datetime.fromtimestamp(int(timestamp), tz=datetime.timezone.utc)
 print(parsed.strftime("%Y-%m-%d"))
