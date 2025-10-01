@@ -6,7 +6,7 @@ WORKDIR /service2/app
 
 RUN groupadd -r myuser && useradd -r -g myuser myuser
 
-# promijeniti u requirements.txt (dodati cache?)
+# TODO promijeniti u requirements.txt (dodati cache?)
 RUN pip install requests
 
 COPY --from=watchdog /fwatchdog /usr/bin/fwatchdog
@@ -17,5 +17,5 @@ USER myuser
 ENV fprocess="python entrypoint.py"
 COPY entrypoint.py .
 
-EXPOSE 8082
+EXPOSE 8080
 CMD [ "fwatchdog" ]

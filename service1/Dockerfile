@@ -14,5 +14,5 @@ USER myuser
 ENV fprocess="python entrypoint.py"
 COPY entrypoint.py .
 
-EXPOSE 8081
+EXPOSE 8080
 CMD [ "fwatchdog" ]

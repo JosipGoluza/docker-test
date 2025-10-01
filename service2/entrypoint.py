@@ -1,17 +1,17 @@
 import requests
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 
 # dodati depends_on i health checks u docker-compose
 SERVICE1_URL = "http://service1:8080"
 
 lines = sys.stdin.read().splitlines()
-format_type = lines[0].strip() if lines else "iso"
+format_type = lines[0].strip() if lines[0].strip() == "timestamp" else "iso"
 
 # call service1 with selected format
-#dodati try catch?
+# TODO dodati try catch?
 response = requests.post(SERVICE1_URL, data=format_type)
 timestamp = response.text.strip()
 
-parsed = datetime.fromisoformat(timestamp) if format_type == "iso" else datetime.fromtimestamp(int(timestamp), tz=datetime.timezone.utc)
+parsed = datetime.fromisoformat(timestamp) if format_type == "iso" else datetime.fromtimestamp(int(timestamp), tz=timezone.utc)
 print(parsed.strftime("%Y-%m-%d"))
