@@ -18,7 +18,7 @@ jobs:
       - name: Extract current version from package.json
         id: get-version
         run: |
-          version=$(node -p "require('./package.json').version2.replace('-snapshot', '')")
+          version=$(node -p "require('./service2/package.json').version.replace('-snapshot', '')")
           echo "VERSION2=$version" >> $GITHUB_ENV  
 
       - name: Log in to DockerHub
@@ -53,15 +53,14 @@ jobs:
       - name: Set next snapshot version
         run: |
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            version=$(node -p "require('./package.json').version2.replace('-snapshot', '')")
+            version=$(node -p "require('./service2/version.json').version.replace('-snapshot', '')")
             IFS='.' read -r major minor patch <<< "$version"
             next_patch=$((patch+1))
             new_version="${major}.${minor}.${next_patch}-snapshot"
-            jq ".version2 = \"$new_version\"" package.json > tmp.$$.json && mv tmp.$$.json package.json
+            jq ".version = \"$new_version\"" ./service2/version.json > tmp.$$.json && mv tmp.$$.json ./service2/version.json
             git config user.name "GitHub Actions"
             git config user.email "actions@github.com"
-            git add package.json
+            git add ./service2/version.json
             git commit -m "chore: bump service2 version to ${new_version} [skip ci]"
-            git pull --rebase origin main
             git push origin main
           fi
