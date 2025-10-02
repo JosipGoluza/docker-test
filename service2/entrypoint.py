@@ -6,7 +6,13 @@ from datetime import datetime, timezone
 SERVICE1_URL = "http://service1:8080"
 
 lines = sys.stdin.read().splitlines()
-format_type = lines[0].strip() if lines[0].strip() == "timestamp" else "iso"
+lines = sys.stdin.read().splitlines()
+if lines and  lines[0].strip() == "timestamp":
+    format_type = "timestamp"
+else:
+    format_type = "iso"
+#format_type = lines[0].strip() if lines[0].strip() == "timestamp" else "iso"
+
 
 # call service1 with selected format
 # TODO dodati try catch?
