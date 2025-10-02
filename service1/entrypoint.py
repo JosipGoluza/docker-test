@@ -2,7 +2,11 @@ import sys
 import datetime
 
 lines = sys.stdin.read().splitlines()
-format_type = lines[0].strip() if lines else "iso"
+if lines and  lines[0].strip() == "timestamp":
+    format_type = "timestamp"
+else:
+    format_type = "iso"
+#format_type = lines[0].strip() if lines else "iso"
 
 now = datetime.datetime.now(datetime.timezone.utc)
 
