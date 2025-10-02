@@ -1,0 +1,67 @@
+name: Build and Push Docker Image Service 1
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'service1/**'
+      - 'package.json'
+      - '.github/workflows/build1.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Extract current version from package.json
+        id: get-version
+        run: |
+          version=$(node -p "require('./package.json').version1.replace('-snapshot', '')")
+          echo "VERSION1=$version" >> $GITHUB_ENV  
+
+      - name: Log in to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and Push Docker image
+        run: |
+          docker build -t ${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}/service1:${{ env.VERSION1 }} -f ./service1/Dockerfile ./service1
+          docker push ${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}/service1:${{ env.VERSION1 }}
+
+      - name: Create GitHub Tag
+        run: |
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            git tag "service1-v${{ env.VERSION1 }}"
+            git push origin --tags
+          fi
+
+  bump-version:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set next snapshot version
+        run: |
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            version=$(node -p "require('./package.json').version1.replace('-snapshot', '')")
+            IFS='.' read -r major minor patch <<< "$version"
+            next_patch=$((patch+1))
+            new_version="${major}.${minor}.${next_patch}-snapshot"
+            jq ".version1 = \"$new_version\"" package.json > tmp.$$.json && mv tmp.$$.json package.json
+            git config user.name "GitHub Actions"
+            git config user.email "actions@github.com"
+            git add package.json
+            git commit -m "chore: bump service1 version to ${new_version} [skip ci]"
+            git push origin main
+          fi
