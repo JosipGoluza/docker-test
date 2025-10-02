@@ -11,7 +11,6 @@ if lines and  lines[0].strip() == "timestamp":
 else:
     format_type = "iso"
 
-
 # call service1 with selected format
 # TODO dodati try catch?
 response = requests.post(SERVICE1_URL, data=format_type)
