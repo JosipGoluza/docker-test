@@ -1,10 +1,10 @@
 FROM ghcr.io/openfaas/classic-watchdog:0.3.4 as watchdog
 
-FROM python:3.12
+FROM python:3.12-alpine
 
 WORKDIR /service2/app
 
-RUN groupadd -r myuser && useradd -r -g myuser myuser
+RUN addgroup -S myuser && adduser -S -G myuser myuser
 
 # TODO promijeniti u requirements.txt (dodati cache?)
 RUN pip install requests

@@ -1,10 +1,10 @@
 FROM ghcr.io/openfaas/classic-watchdog:0.3.4 as watchdog
 
-FROM python:3.12
+FROM python:3.12-alpine
 
 WORKDIR /service1/app
 
-RUN groupadd -r myuser && useradd -r -g myuser myuser
+RUN addgroup -S myuser && adduser -S -G myuser myuser
 
 COPY --from=watchdog /fwatchdog /usr/bin/fwatchdog
 RUN chmod +x /usr/bin/fwatchdog
