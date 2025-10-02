@@ -1,12 +1,12 @@
-name: Build and Push Docker Image Service 1
+name: Build and Push Docker Image Service 2
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'service1/**'
-      - '.github/workflows/build1.yml'
+      - 'service2/**'
+      - '.github/workflows/build2.yml'
 
 jobs:
   build:
@@ -18,8 +18,8 @@ jobs:
       - name: Extract current version from package.json
         id: get-version
         run: |
-          version=$(node -p "require('./package.json').version1.replace('-snapshot', '')")
-          echo "VERSION1=$version" >> $GITHUB_ENV  
+          version=$(node -p "require('./package.json').version2.replace('-snapshot', '')")
+          echo "VERSION2=$version" >> $GITHUB_ENV  
 
       - name: Log in to DockerHub
         uses: docker/login-action@v3
@@ -32,13 +32,13 @@ jobs:
 
       - name: Build and Push Docker image
         run: |
-          docker build -t ${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}-service1:${{ env.VERSION1 }} -f ./service1/Dockerfile ./service1
-          docker push ${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}-service1:${{ env.VERSION1 }}
+          docker build -t ${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}-service2:${{ env.VERSION2 }} -f ./service2/Dockerfile ./service2
+          docker push ${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}-service2:${{ env.VERSION2 }}
 
       - name: Create GitHub Tag
         run: |
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            git tag "service1-v${{ env.VERSION1 }}"
+            git tag "service2-v${{ env.VERSION2 }}"
             git push origin --tags
           fi
 
@@ -53,14 +53,14 @@ jobs:
       - name: Set next snapshot version
         run: |
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            version=$(node -p "require('./package.json').version1.replace('-snapshot', '')")
+            version=$(node -p "require('./package.json').version2.replace('-snapshot', '')")
             IFS='.' read -r major minor patch <<< "$version"
             next_patch=$((patch+1))
             new_version="${major}.${minor}.${next_patch}-snapshot"
-            jq ".version1 = \"$new_version\"" package.json > tmp.$$.json && mv tmp.$$.json package.json
+            jq ".version2 = \"$new_version\"" package.json > tmp.$$.json && mv tmp.$$.json package.json
             git config user.name "GitHub Actions"
             git config user.email "actions@github.com"
             git add package.json
-            git commit -m "chore: bump service1 version to ${new_version} [skip ci]"
+            git commit -m "chore: bump service2 version to ${new_version} [skip ci]"
             git push origin main
           fi
