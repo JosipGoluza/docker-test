@@ -15,10 +15,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
 
-      - name: Extract current version from package.json
+      - name: Extract current version from version.json
         id: get-version
         run: |
-          version=$(node -p "require('./service2/package.json').version.replace('-snapshot', '')")
+          version=$(node -p "require('./service2/version.json').version.replace('-snapshot', '')")
           echo "VERSION2=$version" >> $GITHUB_ENV  
 
       - name: Log in to DockerHub

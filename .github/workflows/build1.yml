@@ -15,7 +15,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
 
-      - name: Extract current version from package.json
+      - name: Extract current version from version.json
         id: get-version
         run: |
           version=$(node -p "require('./service1/version.json').version.replace('-snapshot', '')")
