@@ -1,6 +1,6 @@
 services:
   service1:
-    build: ./service1
+    image: ${DOCKER_USERNAME}/${REPOSITORY_NAME}-service1:${SERVICE1_VERSION}
     ports:
       - 8081:8080
     develop:
@@ -15,7 +15,7 @@ services:
       retries: 5
       start_period: 10s
   service2:
-    build: ./service2
+    image: ${DOCKER_USERNAME}/${REPOSITORY_NAME}-service2:${SERVICE2_VERSION}
     ports:
       - 8082:8080
     develop:
