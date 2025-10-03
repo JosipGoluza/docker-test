@@ -19,4 +19,4 @@ if format_type == "timestamp":
 else:
     print(now.isoformat())
 
-print("Service started with " + health_check + " second start period")
+#print("Service started with " + health_check + " second start period")
