@@ -18,5 +18,3 @@ timestamp = response.text.strip()
 
 parsed = datetime.fromisoformat(timestamp) if format_type == "iso" else datetime.fromtimestamp(int(timestamp), tz=timezone.utc)
 print(parsed.strftime("%Y-%m-%d"))
-
-#test workflow
