@@ -1,5 +1,10 @@
 import sys
 import datetime
+import os
+
+
+health_check = os.environ['START_PERIOD_CHECK'] 
+print("Service started with " + health_check + " second start period")
 
 lines = sys.stdin.read().splitlines()
 

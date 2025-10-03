@@ -6,6 +6,9 @@ while [ $# -gt 0 ]; do
     --version_service2=*)
       export SERVICE2_VERSION="${1#*=}"
       ;;
+    --additional_param_1=*)
+      export START_PERIOD_CHECK="${1#*=}"
+      ;;
     *)
       printf "***************************\n"
       printf "* Error: Invalid argument.*\n"

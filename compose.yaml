@@ -3,6 +3,8 @@ services:
     image: ${DOCKER_USERNAME}/${REPOSITORY_NAME}-service1:${SERVICE1_VERSION}
     ports:
       - 8081:8080
+    environment:
+      - START_PERIOD_CHECK=${START_PERIOD_CHECK}
     develop:
       watch:
         - path: ./service1/requirements.txt
@@ -15,7 +17,7 @@ services:
       interval: 10s
       timeout: 10s
       retries: 5
-      start_period: 10s
+      start_period: ${START_PERIOD_CHECK}s
   service2:
     image: ${DOCKER_USERNAME}/${REPOSITORY_NAME}-service2:${SERVICE2_VERSION}
     ports:
