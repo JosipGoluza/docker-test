@@ -1,0 +1,63 @@
+name: docker-axiros
+services:
+  service1:
+    develop:
+      watch:
+        - path: /home/josip/python-projects/test/docker-axiros/service1/requirements.txt
+          action: rebuild
+        - path: /home/josip/python-projects/test/docker-axiros/service1
+          action: sync
+          target: /service1/app
+    environment:
+      START_PERIOD_CHECK: "5"
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - -f
+        - http://localhost:8080/_/health
+      timeout: 10s
+      interval: 10s
+      retries: 5
+      start_period: 5s
+    image: josip12/docker-test-service1:0.0.13
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 8080
+        published: "8081"
+        protocol: tcp
+  service2:
+    develop:
+      watch:
+        - path: /home/josip/python-projects/test/docker-axiros/service2/requirements.txt
+          action: rebuild
+        - path: /home/josip/python-projects/test/docker-axiros/service2
+          action: sync
+          target: /service2/app
+    depends_on:
+      service1:
+        condition: service_started
+        required: true
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - -f
+        - http://localhost:8080/_/health
+      timeout: 10s
+      interval: 10s
+      retries: 5
+      start_period: 10s
+    image: josip12/docker-test-service2:0.0.8
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 8080
+        published: "8082"
+        protocol: tcp
+networks:
+  default:
+    name: docker-axiros_default

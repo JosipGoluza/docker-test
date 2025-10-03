@@ -35,12 +35,8 @@ fi
 
 source .env
 
-docker login --username "$DOCKER_USERNAME" --password "$DOCKER_PASSWORD"
+docker-compose config > docker-compose-kompose.yaml
 
-# TODO dodati additional param u env
+kompose convert -f docker-compose-kompose.yaml
 
-#${VERSION//v} za micanje v
-docker pull $DOCKER_USERNAME/$REPOSITORY_NAME-service1:$SERVICE1_VERSION
-docker pull $DOCKER_USERNAME/$REPOSITORY_NAME-service2:$SERVICE2_VERSION
-
-docker compose up
+kubectl apply -f service1-service.yaml,service2-service.yaml,service1-deployment.yaml,service2-deployment.yaml
