@@ -6,8 +6,9 @@ WORKDIR /service2/app
 
 RUN addgroup -S myuser && adduser -S -G myuser myuser
 
-# TODO promijeniti u requirements.txt (dodati cache?)
-RUN pip install requests
+RUN --mount=type=cache,target=/root/.cache/pip \
+    --mount=type=bind,source=requirements.txt,target=requirements.txt \
+    python -m pip install -r requirements.txt
 
 COPY --from=watchdog /fwatchdog /usr/bin/fwatchdog
 RUN chmod +x /usr/bin/fwatchdog
