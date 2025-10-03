@@ -14,5 +14,3 @@ if format_type == "timestamp":
     print(str(int(now.timestamp())))
 else:
     print(now.isoformat())
-
-#test workflow
