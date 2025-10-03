@@ -8,7 +8,7 @@ on:
 
 # TODO lint
 jobs:
-  lint-test:
+  lint-test1:
     runs-on: ubuntu-latest
     defaults:
       run:
