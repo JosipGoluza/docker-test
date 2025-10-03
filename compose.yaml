@@ -5,6 +5,8 @@ services:
       - 8081:8080
     develop:
       watch:
+        - path: ./service1/requirements.txt
+          action: rebuild
         - path: ./service1
           action: sync
           target: /service1/app
